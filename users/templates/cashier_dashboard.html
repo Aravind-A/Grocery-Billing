@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Billing | Maligai</title>
+	{% load staticfiles %}
+	<link rel="stylesheet" type="text/css" href="{% static 'bootstrap-3.3.7-dist/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'bootstrap-3.3.7-dist/css/bootstrap-theme.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/custom.css' %}">
+	
+</head>
+
+<body background="{% static 'supermarket2.jpg' %}">
+	<div class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#mynavbar-content">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                	<span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">Cashier : {{ emp.name }}</a>
+            </div>
+            <div class="collapse navbar-collapse" id="mynavbar-content">
+                <ul class="nav navbar-nav pull-right">
+                    <li><a href="/users/logout">Logout</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <br>
+    <div class="container">
+    	<form action="" method="POST">{% csrf_token %}
+    		<input type="number" name="customer_id" id="customer_id" placeholder="Customer ID" onchange="get_customer(this.value)"/>
+    	</form>
+    	<br>
+    	<div class="row">
+    		<div class="col-md-3" id="customer_details">
+    			<p id="customer_error"></p>
+    			<p id="customer_name"></p><p id="customer_phone"></p><p id="customer_address"></p><p id="customer_points"></p>
+    		</div>
+    		<div class="col-md-2 col-md-offset-2 text-center">
+    			<h1 style="background-color: white">CART</h1>
+    		</div>
+    	</div>
+    </div>
+    		<form action="/details/generate_bill" method="POST" id="form1">{% csrf_token %}
+				<div class="container">
+					<div class="row">
+						<div class="col-md-12">
+							<table class="table table-bordered table-striped" id="table1" style="background-color: white">
+								<thead>
+								<tr class="row">
+									<th class="col-md-1 text-center">Item ID</th>
+									<th class="col-md-4 text-center">Item Name</th>
+									<th class="col-md-1 text-center">Quantity Available</th> 
+									<th class="col-md-1 text-center">Quantity Purchased</th>
+									<th class="col-md-2 text=center">Unit Price</th>
+									<th class="col-md-1 text-center">Discount (%)</th>
+									<th class="col-md-2 text-center">Amount</th>
+								</tr>
+								</thead>
+								<tbody id="tbody1">
+									{% for i in range %}	
+									<tr class="row">
+    	
+<td class="col-md-1 text-center"><input type="number" id="item_id_{{ i }}" name="item_id" onchange="get_details(this.value, this.id)"></td>
+<td class="col-md-4 text-center" name="item_name" id="item_name_{{ i }}"></td>
+<td class="col-md-1 text-center" name="qty_avail" id="qty_avail_{{ i }}"></td>
+<td class="col-md-1 text-center"><input type="number" id="item_qty_{{ i }}" name="item_qty" onchange="get_price(this.value, this.id)"></td>
+<td class="col-md-2 text-center" name="unit_price" id="unit_price_{{ i }}"></td>
+<td class="col-md-1 text-center" name="discount" id="discount_{{ i }}"></td>
+<td class="col-md-2 text-center" name="item_price" id="item_price_{{ i }}"></td>
+									</tr>	
+									{% endfor %}		
+								</tbody>
+							</table>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-3 col-md-offset-7 text-center">
+							<h2 style="background-color: white">Total : </h2>
+						</div>
+						<div class="col-md-2 text-center">
+							<p style="background-color: white"><h2 id="total" name="total" style="background-color: white">0.00</h2></p>
+						</div>
+
+
+					</div>
+					<input type="hidden" name="item_dict" id="item_dict" value="-1" />
+					<input type="hidden" name="cust_id" id="cust_id" value="-1" />
+					<input type="hidden" name="hidden_total" id="hidden_total" />
+					<input type="hidden" name="cashier_id" id="cashier_id" value="{{ emp.id }}">
+					<br>
+					<div class="row">
+    	            	<div class="col-md-2 col-md-offset-10">
+    	            		<button type="button" class="btn btn-success form-control text-center" onclick="transactionPrompt()">
+    	            			<span class="glyphicon glyphicon-shopping-cart pull-left"></span>
+    	            			Checkout
+    	            		</button>
+    					</div>
+    	        	</div>	
+				</div>
+			</form>
+	
+	<script type="text/javascript" src="{% static 'js/jquery-3.1.1.min.js' %}"></script>
+	<script type="text/javascript" src="{% static 'bootstrap-3.3.7-dist/js/bootstrap.min.js' %}"></script>
+	<script type="text/javascript">
+
+
+		var num_items = 3;
+		var itemDict = {};
+		var item_ids = [];
+		var cur_total = 0.00;
+
+		function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie != '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = jQuery.trim(cookies[i]);
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+var csrftoken = getCookie('csrftoken');
+function csrfSafeMethod(method) {
+    // these HTTP methods do not require CSRF protection
+    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+}
+$.ajaxSetup({
+    beforeSend: function(xhr, settings) {
+        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+        }
+    }
+});
+
+function get_details(itemid, tagid){
+		
+		var keys = tagid.split("_");
+		var start = parseInt(keys[2]);
+		console.log(start);
+		if(item_ids.length != 0 && item_ids.indexOf(itemid) != -1){
+			alert("Item with item id " + itemid + " is already present in the list!");
+			document.getElementById("item_name_" + keys[2]).innerHTML = "Item with item id " + itemid + " is already present in the list!";
+			document.getElementById("item_qty_" + keys[2]).disabled = true;
+    		disable(start);
+		}	
+		else{
+			$.post("/details/get_item_details",
+				{	item_id: itemid  },
+    		function(data, status){
+    			if(data == "No such item"){
+    				document.getElementById("item_name_" + keys[2]).innerHTML = data;
+    				document.getElementById("item_qty_" + keys[2]).disabled = true;
+    				disable(start);
+    				
+    			}
+    			else{	item_ids.push(itemid);
+ 						var info = data.split(";");
+    					document.getElementById("item_qty_" + keys[2]).disabled = false;
+    					enable(start);
+    					document.getElementById("item_name_" + keys[2]).innerHTML = info[0];
+    					document.getElementById("unit_price_" + keys[2]).innerHTML = info[1];
+    					document.getElementById("qty_avail_" + keys[2]).innerHTML = info[2];
+    					document.getElementById("discount_" + keys[2]).innerHTML = info[3];
+    				}	
+    		});
+		}
+
+		
+    	
+}
+
+function get_price(itemqty, tagid){
+		var keys = tagid.split("_");
+		var itemid = document.getElementById("item_id_" + keys[2]).value;
+		var start = parseInt(keys[2]);
+		$.post("/details/get_item_price",
+    		{ item_qty: itemqty,
+    			item_id: itemid	 },
+    		function(data,status){
+    			document.getElementById("item_price_" + keys[2]).innerHTML = data;
+    			if(data == 'N.A.'){
+    				$('#item_qty_' + keys[2]).val("");
+    				disable(start);
+    			}
+    			else{
+    				enable(start);
+    				itemDict[itemid] = itemqty;
+					setValue();
+					cur_total += parseFloat(data);
+					document.getElementById("total").innerHTML = parseFloat(cur_total.toString()).toFixed(2);
+					$('#table1 > tbody:last').append('<tr class="row">' + 
+    '<td class="col-md-1 text-center">' + 
+    '<input type="number" id="item_id_' + num_items.toString() + '" name="item_id" onchange="get_details(this.value,this.id)"></td>' +
+	'<td class="col-md-4 text-center" name="item_name" id="item_name_' + num_items.toString() + '"></td>' + 
+	'<td class="col-md-1 text-center" name="qty_avail" id="qty_avail_' + num_items.toString() + '"></td>' +
+	'<td class="col-md-1 text-center">' + 
+	'<input type="number" id="item_qty_' + num_items.toString() + '" name="item_qty" onchange="get_price(this.value, this.id)"></td>' +
+	'<td class="col-md-2 text-center" name="unit_price" id="unit_price_' + num_items.toString() + '"></td>' + 
+	'<td class="col-md-1 text-center" name="discount" id="discount_' + num_items.toString() + '"></td>' +
+	'<td class="col-md-2 text-center" name="item_price" id="item_price_' + num_items.toString() + '"></td></tr>');
+    			num_items += 1;
+    			}
+    		});
+}		
+		
+		function setValue(){
+			//console.log("Current length : " + item_ids.length.toString());
+			//$('#num_items').val(item_ids.length.toString());
+			console.log(JSON.stringify(itemDict));
+			$('#item_dict').val(JSON.stringify(itemDict));
+		}
+
+		function disable(start){
+    		for(var j = start + 1;j < num_items; j+=1){
+    				document.getElementById("item_qty_" + j.toString()).disabled = true;
+    				document.getElementById("item_id_" + j.toString()).disabled = true;	
+    			}
+		}
+		function enable(start){
+			for(var j = start + 1;j < num_items; j+=1){
+    				document.getElementById("item_qty_" + j.toString()).disabled = false;
+    				document.getElementById("item_id_" + j.toString()).disabled = false;	
+    			}
+		}
+
+		function transactionPrompt(){
+			if(Object.keys(itemDict).length == 0){
+
+			}
+			else{
+				var total = $('#total').text();
+				console.log("Total : " + total);
+				$('#hidden_total').val(total);
+				var cash = prompt("Total : " + total + " Enter cash tendered :-");
+				if(cash != null){
+					$('#form1').submit();
+					alert("Balance : " + (parseFloat(cash) - parseFloat(total)).toString());
+				}
+			}
+		}
+
+		function get_customer(customerId){
+
+			$.post("/details/get_customer",
+					{ customer_id : customerId },
+					function(data,status){
+						console.log(data);
+						$('#customer_details').css("background-color","white");
+						if(data == "No customer found"){
+							$('#customer_error').text(data);
+							$('#customer_name').text("");
+							$('#customer_phone').text("");
+							$('#customer_address').text("");
+							$('#customer_points').text("");
+							$('#cust_id').val("-1");
+						}
+						else{
+							var details = data.split(";");
+							$('#customer_error').text("");
+							$('#customer_name').text(details[0]);
+							$('#customer_phone').text(details[1]);
+							$('#customer_address').text(details[2]);
+							$('#customer_points').text("Points : " + details[3]);
+							console.log("Customer Id : " + customerId);
+							$('#cust_id').val(customerId);
+						}
+			});
+		}
+	</script>
+</body>
+</html>

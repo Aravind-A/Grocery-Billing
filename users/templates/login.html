@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Login | Maligai</title>
+	{% load staticfiles %}
+</head>
+<body>
+	<form action="" method="POST">{% csrf_token %}
+	{% if auth == -2 %}
+		<p>Wrong credentials</p><br>
+	{% endif %}
+	{{ form.as_p }}
+	<input type="submit" value="Login!">
+	</form>
+	<a href="/users/register">Register</a>
+</body>
+</html>

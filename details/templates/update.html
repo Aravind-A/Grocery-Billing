@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<head>
+    <title>Inventory Control</title>
+    {% load staticfiles %}
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="{% static 'bootstrap-3.3.7-dist/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'bootstrap-3.3.7-dist/css/bootstrap-theme.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/jquery_helper.css' %}">
+    
+    <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="/resources/demos/style.css">
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>-->
+
+    <style type="text/css">
+      /* make sidebar nav vertical */
+      @media (min-width: 768px) {
+        .sidebar-nav .navbar .navbar-collapse {
+          padding: 0;
+          max-height: none;
+        }
+        .sidebar-nav .navbar ul {
+          float: none;
+          display: block;
+        }
+        .sidebar-nav .navbar li {
+          float: none;
+          display: block;
+        }
+        .sidebar-nav .navbar li a {
+          padding-top: 12px;
+          padding-bottom: 12px;
+        }
+      }   
+      .navi a {
+        border-bottom: 1px solid #0d172e;
+        border-top: 1px solid #0d172e;
+        color: #ffffff;
+        display: block;
+        font-size: 17px;
+        font-weight: 500;
+        padding: 28px 20px;
+        text-decoration: none;
+      }
+      
+      .navi i {
+        margin-right: 15px;
+        color: #5584ff;
+      }
+      
+      .navi .active a {
+        background: #122143;
+        border-left: 5px solid #5584ff;
+        padding-left: 15px;
+      }
+      
+      .navi a:hover {
+        background: #122143 none repeat scroll 0 0;
+        border-left: 5px solid #5584ff;
+        display: block;
+        padding-left: 15px;
+      }
+      
+      .navbar-default {
+        background-color: #ffffff;
+        border-color: #ffffff;
+      }
+      
+      .navbar-toggle {
+        border: none;
+      }
+      
+      .navbar-default .navbar-toggle:focus,
+      .navbar-default .navbar-toggle:hover {
+        background-color: rgba(0, 0, 0, 0);
+      }
+      
+      .navbar-default .navbar-toggle .icon-bar {
+        background-color: #0e1a35;
+      }
+      
+      @media screen and (min-width: 768px) {
+        #adv-search {
+          width: 500px;
+          margin: 0 auto;
+        }
+        .dropdown.dropdown-lg {
+          position: static !important;
+        }
+        .dropdown.dropdown-lg .dropdown-menu {
+          min-width: 500px;
+        }
+      }
+
+    </style>
+
+  </head>
+  <body>
+    {% if updated == 1 %}
+      <script type="text/javascript">
+        alert("Updated successfully");
+      </script>
+    {% endif %}
+    {% if added == 1 %}
+      <script type="text/javascript">
+        alert("Added successfully");
+      </script>
+    {% endif %}
+    <!--    <! get var Name from login >-->
+    <nav class="navbar navbar-default">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="#"> Logged in as : {{ emp.name }} </a>
+        </div>
+        <ul class="nav navbar-nav pull-right">
+          <li><a href="/users/logout"> Logout </a></li>
+        </ul>
+      </div>
+    </nav>
+
+    <div class="container-fluid display-table">
+      <div class="row display-table-row">
+        <div class="col-md-2 display-table-cell v-align box" id="navigation">
+          <div class="navi">
+            <div class="container">
+              <div class="row">
+                <div class="col-md-3">
+                  <div class="sidebar-nav">
+                    <div class="navbar navbar-default" role="navigation">
+                      <div class="navbar-header">
+                        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".sidebar-navbar-collapse">
+                          <span class="sr-only">Toggle navigation</span>
+                          <span class="icon-bar"></span>
+                          <span class="icon-bar"></span>
+                          <span class="icon-bar"></span>
+                        </button>
+                        <span class="visible-xs navbar-brand">Sidebar menu</span>
+                      </div>
+                      <div class="navbar-collapse collapse sidebar-navbar-collapse">
+                        <ul class="nav navbar-nav">
+                          <br>
+                          <li align="center"><b> MANAGER PORTAL </b></li>
+                          <br>
+                          <li><a href="/users/dashboard"> Search </a></li>
+                          <li class="active"><a href="#"> Update Stock </a></li>
+                          <li><a href="/details/item_list"> View Items in Inventory </a></li>
+                        </ul>
+                      </div>
+                      <!--/.nav-collapse -->
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+    <form action="/details/update_stock" method="POST">{% csrf_token %}
+    <div class="container">
+      <div class="row">
+        <div class="col-md-2" align="center">
+          <div class="input-group">
+            <input type="number" class="form-control" placeholder="Enter Item ID" id="ItemId" name="ItemId" required onchange="get_details(this.value)" />
+          </div>
+        </div>
+        <div class="col-md-2" align="right">
+          <div class="input-group">
+            <input type="number" class="form-control" placeholder="Quantity" id="Qty" name="Qty" required />
+            <span class="input-group-btn">
+              <button type="submit" class="btn btn-primary" id="UpdateQty"><span class="glyphicon glyphicon-upload" aria-hidden="true"></span></button>
+            </span>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6 col-md-offset-3 text-center">
+          <p id="item_name"></p>
+          <p id="unit_price"></p>
+          <p id="qty_avail"></p>
+          <p id="discount"></p>
+        </div>
+      </div>
+    </div>
+    </form> 
+    <br>
+    <div class="container">
+      <h3>Add a new Item :</h3> 
+    </div>
+    <form action="/details/add_item" method="POST">{% csrf_token %}
+      <div class="container">
+        <div class="row">
+          <div class="col-md-2">
+            <div class="input-group">
+              <input type="text" name="item_name" class="form-control" placeholder="Item Name" required />
+            </div>
+          </div>
+          <div class="col-md-2">
+            <div class="input-group">
+              <input type="number" name="unit_price" class="form-control" placeholder="Unit Price" required />
+            </div>
+          </div>
+          <div class="col-md-2">
+            <div class="input-group">
+              <input type="number" name="qty_avail" class="form-control" placeholder="Quantity Available" required />
+            </div>
+          </div>
+          <div class="col-md-2">
+            <div class="input-group">
+              <input type="number" name="discount" class="form-control" placeholder="Dicount(%)" required />
+            </div>
+          </div>
+          <div class="col-md-2">
+            <div class="input-group-btn">
+              <button type="submit" class="btn btn-primary">Add Item to Inventory</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+    <script type="text/javascript" src="{% static 'js/jquery-3.1.1.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'bootstrap-3.3.7-dist/js/bootstrap.min.js' %}"></script>
+    <script type="text/javascript">
+
+
+    var num_items = 3;
+    var itemDict = {};
+    var item_ids = [];
+    var cur_total = 0.00;
+
+    function getCookie(name) {
+      var cookieValue = null;
+      if (document.cookie && document.cookie != '') {
+          var cookies = document.cookie.split(';');
+          for (var i = 0; i < cookies.length; i++) {
+              var cookie = jQuery.trim(cookies[i]);
+              // Does this cookie string begin with the name we want?
+              if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+              }
+          }
+      }
+      return cookieValue;
+    }
+    var csrftoken = getCookie('csrftoken');
+    function csrfSafeMethod(method) {
+      // these HTTP methods do not require CSRF protection
+      return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+    }
+    $.ajaxSetup({
+      beforeSend: function(xhr, settings) {
+        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+        }
+      }
+    });
+
+    function get_details(itemid){
+
+    $.post("/details/get_item_details",
+        { item_id: itemid  },
+        function(data, status){
+          if(data == "No such item"){
+            document.getElementById("item_name").innerHTML = data;
+            document.getElementById("Qty").disabled = true;
+          }
+          else{ 
+            var info = data.split(";");
+            document.getElementById("Qty").disabled = false;
+            document.getElementById("item_name").innerHTML = "Item Name : " + info[0];
+            document.getElementById("unit_price").innerHTML = "Unit Price : " + info[1];
+            document.getElementById("qty_avail").innerHTML = "Quantity available : " + info[2];
+            document.getElementById("discount").innerHTML = "Dicsount % : " + info[3];
+          }
+        });
+  }
+  </script>
+  </body>
+</html>
+

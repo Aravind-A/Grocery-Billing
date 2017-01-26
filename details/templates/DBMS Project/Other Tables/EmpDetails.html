@@ -1,0 +1,236 @@
+﻿<!DOCTYPE html>
+
+<html >
+  
+<head>
+    
+<meta charset="UTF-8">
+    
+
+<title>Employee details - E-billing management Systems</title>
+    
+
+<script src="js/modernizr.js" type="text/javascript">
+</script>
+
+
+    
+    
+    
+        
+
+	<style>
+      
+/* NOTE: The styles were added inline because Prefixfree needs access to your styles and they must be inlined if they are on local disk! */
+      
+@charset "UTF-8";
+
+
+[data-sort-by='empID'] [data-prop-name='empID'], 
+[data-sort-by='name'] [data-prop-name='name'], 
+[data-sort-by='shift'] [data-prop-name='shift'] 
+{
+  background: rgba(0, 0, 128, 0.15);
+  text-shadow: 0 1px #eee;
+}
+
+
+[data-sort-by='empID'] [data-prop-name='empID']:before, 
+[data-sort-by='name'] [data-prop-name='name']:before, 
+[data-sort-by='shift'] [data-prop-name='shift']:before 
+{
+  box-shadow: 0 0 .5em navy;
+}
+
+
+[data-sort-by='empID'] .prop__name[data-prop-name='empID'], 
+[data-sort-by='name'] .prop__name[data-prop-name='name'], 
+[data-sort-by='shift'] .prop__name[data-prop-name='shift'] 
+{
+  color: lightcyan;
+}
+
+
+[data-sort-by='empID'] .prop__name[data-dir='1'][data-prop-name='empID']:after, 
+[data-sort-by='name'] .prop__name[data-dir='1'][data-prop-name='name']:after, 
+[data-sort-by='shift'] .prop__name[data-dir='1'][data-prop-name='shift']:after 
+{
+  content: '▲';
+}
+
+
+[data-sort-by='empID'] .prop__name[data-dir='-1'][data-prop-name='empID']:after, 
+[data-sort-by='name'] .prop__name[data-dir='-1'][data-prop-name='name']:after, 
+[data-sort-by='shift'] .prop__name[data-dir='-1'][data-prop-name='shift']:after 
+{
+  content: '▼';
+}
+
+* {
+  box-sizing: inherit;
+}
+
+
+
+body {
+  
+background: #555;
+  
+font: 1em/1.25 trebuchet ms, verdana, sans-serif;
+  
+color: #fff;
+}
+
+
+
+table {
+  
+box-sizing: border-box;
+  
+overflow: hidden;
+  
+margin: 4em auto;
+  
+border-collapse: collapse;
+  
+min-width: 23em;
+  
+width: 70%;
+   
+border-radius: .5em;
+  
+box-shadow: 0 0 .5em #000;
+}
+
+
+
+thead {
+  
+background: linear-gradient(#606062, #28262b);
+  
+font-weight: 700;
+  
+letter-spacing: 1px;
+  
+text-transform: uppercase;
+  
+cursor: pointer;
+}
+
+
+
+th {
+  text-align: left;
+}
+
+
+
+tbody {
+  display: flex;
+  flex-direction: column;
+  color: #000;
+}
+
+
+
+tr {
+  display: block;
+  overflow: hidden;
+  width: 100%;
+}
+
+
+
+.odd {
+  background: linear-gradient(#eeeeee 1px, #dddddd 1px, #cccccc calc(100% - 1px), #999999 calc(100% - 1px));
+}
+
+
+
+.even {
+  background: linear-gradient(#eeeeee 1px, #bbbbbb 1px, #aaaaaa calc(100% - 1px), #999999 calc(100% - 1px));
+}
+
+
+
+[class*='prop__'] {
+  float: left;
+  position: relative;
+  padding: .5em 1em;
+  width: 40%;
+}
+
+
+[class*='prop__']:last-child {
+  width: 20%;
+}
+
+
+[class*='prop__']:before {
+  position: absolute;
+  top: -.5em;
+  right: 0;
+  bottom: -5em;
+  left: 0;
+  content: "";
+}
+
+
+[class*='prop__']:after {
+  position: absolute;
+  right: .5em;
+}
+
+   
+
+
+		</style>
+
+
+    
+        
+
+<script src="js/prefixfree.min.js"></script>
+
+    
+    
+  
+			</head>
+
+  
+
+
+<body>
+
+    <p><h1>Displaying Employee details: </p>
+
+</h1>
+
+<table>
+  <thead>
+    <tr>
+      
+
+<th class='prop__name' data-prop-name='empID'>Employee ID</th>
+      
+<th class='prop__name' data-prop-name='name'>Name of Employee</th>
+
+<th class='prop__name' data-prop-name='shift'>Shift</th> 
+      
+ 
+</tr>
+  </thead>
+  <tbody></tbody>
+</table>
+    
+        
+
+<script src="js/EmpDetails.js">
+</script>
+
+    
+    
+  
+</body>
+
+</html>

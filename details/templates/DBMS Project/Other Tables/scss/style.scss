@@ -1,0 +1,95 @@
+@import "compass/css3";
+
+$sortcols: 'firstName', 'lastName', 'birth';
+
+%sortcol {
+  background: rgba(navy, .15);
+  text-shadow: 0 1px #eee;
+  
+  &:before {
+    box-shadow: 0 0 .5em navy;
+  }
+  
+  &.prop__name {
+    color: lightcyan;
+    
+    &[data-dir='1']:after { content: '▲'; }
+    &[data-dir='-1']:after { content: '▼'; }
+  }
+}
+
+* { box-sizing: inherit; }
+
+body {
+  background: #555;
+  font: 1em/1.25 trebuchet ms, verdana, sans-serif;
+  color: #fff;
+}
+
+table {
+  box-sizing: border-box;
+  overflow: hidden;
+  margin: 4em auto;
+  border-collapse: collapse;
+  min-width: 23em; width: 70%; max-width: 56em;
+  border-radius: .5em;
+  box-shadow: 0 0 .5em #000;
+}
+
+thead {
+  background: linear-gradient(#606062, #28262b);
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+th { text-align: left; }
+
+tbody {
+  display: flex;
+  flex-direction: column;
+  color: #000;
+}
+
+tr {
+  display: block;
+  overflow: hidden;
+  width: 100%;
+}
+
+.odd {
+  background: linear-gradient(#eee 1px, #ddd 1px, #ccc calc(100% - 1px), #999 calc(100% - 1px));
+}
+
+.even {
+  background: linear-gradient(#eee 1px, #bbb 1px, #aaa calc(100% - 1px), #999 calc(100% - 1px));
+}
+
+[class*='prop__'] {
+  float: left;
+  position: relative;
+  padding: .5em 1em;
+  width: 40%;
+  
+  &:last-child { width: 20%; }
+  
+  &:before {
+    position: absolute;
+    top: -.5em; right: 0; bottom: -5em; left: 0;
+    content: ''
+  }
+  
+  &:after {
+    position: absolute;
+    right: .5em;
+  }
+}
+
+@each $col in $sortcols {
+  [data-sort-by='#{$col}'] {
+    [data-prop-name='#{$col}'] {
+      @extend %sortcol;
+    }
+  }
+}

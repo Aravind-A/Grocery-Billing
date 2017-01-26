@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html> 
+  <head>  
+    <meta charset="UTF-8">
+    <title>Inventory</title>
+    {% load staticfiles %}
+    <link rel="stylesheet" type="text/css" href="{% static 'bootstrap-3.3.7-dist/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'bootstrap-3.3.7-dist/css/bootstrap-theme.min.css' %}">
+    <style type="text/css">
+      .table > tbody > tr > td {
+        vertical-align: middle;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+        <div class="row">
+          <div class="col-md-2">
+            <br>
+            <a href="/users/dashboard">Back to dashboard</a>
+          </div>
+          <div class="col-md-8 text-center">
+            <h2>Items in Inventory</h2>
+          </div>
+        </div>
+        <table class="table table-bordered table-striped" id="table0">
+          <thead>
+            <tr class="row">
+              <th class="col-md-2 text-center">Item ID</th>
+              <th class="col-md-4 text-center">Item Name</th> 
+              <th class="col-md-2 text-center">Unit Price</th>
+              <th class="col-md-2 text-center">Quantity Available</th>
+              <th class="col-md-2 text-center">Discount (%)</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for id,name,price,qty,discount in details %}
+              <tr class="row">
+                <td class="col-md-2 text-center">{{ id }}</td>
+                <td class="col-md-4 text-center">{{ name }}</td>
+                <td class="col-md-2 text-center">{{ price }}</td>
+                <td class="col-md-2 text-center">{{ qty }}</td>
+                <td class="col-md-2 text-center">{{ discount }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Billing | Maligai</title>
+	{% load staticfiles %}
+	<link rel="stylesheet" type="text/css" href="{% static 'bootstrap-3.3.7-dist/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'bootstrap-3.3.7-dist/css/bootstrap-theme.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/custom.css' %}">
+	
+</head>
+
+<body>
+	<div class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#mynavbar-content">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                	<span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/users/dashboard">Next Bill</a>
+            </div>
+            <div class="collapse navbar-collapse" id="mynavbar-content">
+                <ul class="nav navbar-nav pull-right">
+                    <li><a href="/users/logout">Logout</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <br>
+    <div class="container">
+    	<div class="row">
+    		<div class="col-md-2 col-md-offset-5 text-center">
+    			<h1 style="background-color: white">INVOICE</h1>
+    		</div>
+    	</div>
+        <div class="row">
+            <div class="col-md-6">
+                {% if customer_name != "NA" %}
+                    <div class="row" style="background-color: white">
+                        <p>{{ customer_name }}</p>
+                    </div>
+                    <div class="row" style="background-color: white">
+                        <p>{{ phone_number }}</p>
+                    </div>
+                    <div class="row" style="background-color: white">
+                        <p>{{ address }}</p>
+                    </div>
+                    <div class="row" style="background-color: white">
+                        <p>Points :<br>Opening : {{ old_points }} Closing : {{ new_points }}</p>
+                    </div>
+                {% endif %}
+            </div>
+            <div class="col-md-6 pull-right">
+                <div class="row" style="background-color: white">
+                    <p>Bill ID : {{ bill_id }}</p>
+                </div>
+                <div class="row" style="background-color: white">
+                    <p>Date &amp; Time : {{ date_time }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="row" style="background-color: white">
+            <div class="col-md-12">
+                <table class="table table-borderless" id="table1" style="background-color: white">
+                    <thead>
+                        <tr class="row">
+                            <th class="col-md-2 text-center">Item ID</th>
+                            <th class="col-md-6 text-center">Item Name</th> 
+                            <th class="col-md-2 text-center">Quantity Purchased</th>
+                            <th class="col-md-2 text-center">Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for id,name,qty,amount in details %}
+                        <tr class="row">
+                            <td class="col-md-2 text-center">{{ id }}</td>
+                            <td class="col-md-6 text-center">{{ name }}</td> 
+                            <td class="col-md-2 text-center">{{ qty }}</td>
+                            <td class="col-md-2 text-center">{{ amount }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-3 col-md-offset-7 text-center">
+                <h2 style="background-color: white">Total : </h2>
+            </div>
+            <div class="col-md-2 text-center">
+                <p><h2 id="total" style="background-color: white">{{ total }}</h2></p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-2 col-md-offset-10">
+                <button type="button" class="btn btn-primary form-control text-center" onclick="printBill()">
+                    <span class="glyphicon glyphicon-shopping-cart pull-left"></span>
+                        Print
+                </button>
+            </div>
+        </div>  
+    </div>
+    <script type="text/javascript" src="{% static 'js/jquery-3.1.1.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'bootstrap-3.3.7-dist/js/bootstrap.min.js' %}"></script>
+    <script type="text/javascript">
+        function printBill(){
+            alert("The invoive has been queued to the printer");
+        }
+    </script>
+</body>
+</html>

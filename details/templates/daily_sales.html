@@ -1,0 +1,84 @@
+﻿<!DOCTYPE html>
+<html> 
+  <head>  
+    <meta charset="UTF-8">
+    <title>Bills on {{ date }}</title>
+    {% load staticfiles %}
+    <link rel="stylesheet" type="text/css" href="{% static 'bootstrap-3.3.7-dist/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'bootstrap-3.3.7-dist/css/bootstrap-theme.min.css' %}">
+    <style type="text/css">
+      .table > tbody > tr > td {
+        vertical-align: middle;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+        <div class="row">
+          <div class="col-md-2">
+            <br>
+            <a href="/users/dashboard">Back to dashboard</a>
+          </div>
+          <div class="col-md-8 text-center"> 
+            <h1>{{ date }}</h1>
+          </div>
+        </div>
+        <table class="table table-bordered table-striped" id="table0">
+          <thead>
+            <tr class="row">
+              <th class="col-md-2 text-center">Bill ID</th>
+              <th class="col-md-2 text-center">Bill Total</th> 
+              <th class="col-md-2 text-center">Customer</th>
+              <th class="col-md-2 text-center">Cashier</th>
+              <th class="col-md-4 text-center">Item Details</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for id,total,cust,cash,loop_var,bill,customer_validity in first %}
+              <tr class="row">
+                <td class="col-md-2 text-center">
+                {{ id }}
+                </td>
+                <td class="col-md-2 text-center">{{ total }}</td> 
+                <td class="col-md-2 text-center">
+                  {% if customer_validity == 0 %}
+                    <p>Unregistered Customer</p>
+                  {% else %}
+                    {% for key,value in cust.items %}
+                      <p>{{ key }} : {{ value }}</p>
+                    {% endfor %}
+                  {% endif %}
+                </td>
+                <td class="col-md-2 text-center">
+                  {% for key,value in cash.items %}
+                    <p>Cashier ID   : {{ key }}</p>
+                    <p>Cashier Name : {{ value }}</p>
+                  {% endfor %}
+                </td>
+                <td class="col-md-4 text-center">
+                  <!--<button class="show-me_{{ loop_var }}">View Bill {{ loop_var }}</button>-->
+                  <table class="table table-bordered table-striped" id="table{{ loop_var }}">
+                    <thead>
+                      <tr class="row">
+                        <th class="col-md-6 text-center">Item Name</th>
+                        <th class="col-md-6 text-center">Qty. Purchased</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for key,value in bill.items %}
+                        <tr class="row">
+                          <td class="col-md-6 text-center">{{ key }}</td>
+                          <td class="col-md-6 text-center">{{ value }}</td>
+                        </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>   
+    </div>                                                                    
+    <!--<script type="text/javascript" src="{% static 'js/jquery-3.1.1.min.js' %}"></script>-->
+  </body>
+</html>

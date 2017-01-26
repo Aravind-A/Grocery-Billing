@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<head>
+    <title>Manager Dashboard</title>
+    {% load staticfiles %}
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="{% static 'bootstrap-3.3.7-dist/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'bootstrap-3.3.7-dist/css/bootstrap-theme.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/jquery_helper.css' %}">
+    
+    <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="/resources/demos/style.css">
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>-->
+
+    <style type="text/css">
+      /* make sidebar nav vertical */
+      @media (min-width: 768px) {
+        .sidebar-nav .navbar .navbar-collapse {
+          padding: 0;
+          max-height: none;
+        }
+        .sidebar-nav .navbar ul {
+          float: none;
+          display: block;
+        }
+        .sidebar-nav .navbar li {
+          float: none;
+          display: block;
+        }
+        .sidebar-nav .navbar li a {
+          padding-top: 12px;
+          padding-bottom: 12px;
+        }
+      }   
+      .navi a {
+        border-bottom: 1px solid #0d172e;
+        border-top: 1px solid #0d172e;
+        color: #ffffff;
+        display: block;
+        font-size: 17px;
+        font-weight: 500;
+        padding: 28px 20px;
+        text-decoration: none;
+      }
+      
+      .navi i {
+        margin-right: 15px;
+        color: #5584ff;
+      }
+      
+      .navi .active a {
+        background: #122143;
+        border-left: 5px solid #5584ff;
+        padding-left: 15px;
+      }
+      
+      .navi a:hover {
+        background: #122143 none repeat scroll 0 0;
+        border-left: 5px solid #5584ff;
+        display: block;
+        padding-left: 15px;
+      }
+      
+      .navbar-default {
+        background-color: #ffffff;
+        border-color: #ffffff;
+      }
+      
+      .navbar-toggle {
+        border: none;
+      }
+      
+      .navbar-default .navbar-toggle:focus,
+      .navbar-default .navbar-toggle:hover {
+        background-color: rgba(0, 0, 0, 0);
+      }
+      
+      .navbar-default .navbar-toggle .icon-bar {
+        background-color: #0e1a35;
+      }
+      
+      @media screen and (min-width: 768px) {
+        #adv-search {
+          width: 500px;
+          margin: 0 auto;
+        }
+        .dropdown.dropdown-lg {
+          position: static !important;
+        }
+        .dropdown.dropdown-lg .dropdown-menu {
+          min-width: 500px;
+        }
+      }
+
+    </style>
+
+  </head>
+  <body>
+    <!--    <! get var Name from login >-->
+    <nav class="navbar navbar-default">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="#"> Logged in as : {{ emp.name }} </a>
+        </div>
+        <ul class="nav navbar-nav pull-right">
+          <li><a href="/users/logout"> Logout </a></li>
+        </ul>
+      </div>
+    </nav>
+
+    <div class="container-fluid display-table">
+      <div class="row display-table-row">
+        <div class="col-md-2 display-table-cell v-align box" id="navigation">
+          <div class="navi">
+            <div class="container">
+              <div class="row">
+                <div class="col-md-3">
+                  <div class="sidebar-nav">
+                    <div class="navbar navbar-default" role="navigation">
+                      <div class="navbar-header">
+                        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".sidebar-navbar-collapse">
+                          <span class="sr-only">Toggle navigation</span>
+                          <span class="icon-bar"></span>
+                          <span class="icon-bar"></span>
+                          <span class="icon-bar"></span>
+                        </button>
+                        <span class="visible-xs navbar-brand">Sidebar menu</span>
+                      </div>
+                      <div class="navbar-collapse collapse sidebar-navbar-collapse">
+                        <ul class="nav navbar-nav">
+                          <br>
+                          <li align="center"><b> MANAGER PORTAL </b></li>
+                          <br>
+                          <li class="active"><a href="#"> Search </a></li>
+                          <li><a href="/details/update_stock"> Update Stock </a></li>
+                          <li><a href="/details/item_list"> View Items in Inventory </a></li>
+                        </ul>
+                      </div>
+                      <!--/.nav-collapse -->
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-9">
+    <!--
+      <div class="container">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="input-group" id="adv-search">
+              <input type="number" class="form-control" placeholder="Search by Customer ID" id="CustomerId" />
+              <div class="input-group-btn">
+                <div class="btn-group" role="group">
+
+                  <button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-search" aria-hidden="true id="CustomerSubmit""></span></button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <br>
+
+      <div class="container">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="input-group" id="adv-search">
+              <input type="number" class="form-control" placeholder="Search by Employee ID" id="EmpId" />
+              <div class="input-group-btn">
+                <div class="btn-group" role="group">
+
+                  <button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-search" aria-hidden="true" id="EmpSubmit"></span></button>
+
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <br>
+      -->
+      <form action="/details/bill_detail" method="POST">{% csrf_token %}
+      <div class="container">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="input-group" id="adv-search">
+              <input type="number" class="form-control" placeholder="Search by Bill ID" id="BillNo" name="BillNo" required />
+              <div class="input-group-btn">
+                <div class="btn-group" role="group">
+                  <button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-search" aria-hidden="true" id="BillSubmit" ></span></button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      </form>
+
+      <br>
+
+      <form action="/details/get_bills_by_date" method="POST">{% csrf_token %}
+      <div class="container">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="input-group" id="adv-search">
+              <input type="text" id="datepicker" name="bill_date" placeholder="Get Bills by Date" class="form-control" required />
+                <div class="input-group-btn">
+                  <div class="btn-group" role="group">
+                    <button type="submit" class="btn btn-primary" id="DateSubmit"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
+                  </div>
+                </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      </form>
+    </div>
+
+  <script type="text/javascript" src="{% static 'js/jquery-3.1.1.min.js' %}"></script>
+  <script type="text/javascript" src="{% static 'bootstrap-3.3.7-dist/js/bootstrap.min.js' %}"></script>
+  <script type="text/javascript" src="{% static 'js/jqueryUI.js' %}"></script>
+  <script>
+    $(function() {
+      $("#datepicker").datepicker({
+        beforeShow: function(input, inst) {
+          setTimeout(function() {
+            inst.dpDiv.css({
+              top: $(".datepicker").offset().top + 35,
+              left: $(".datepicker").offset().left
+            });
+          }, 0);
+        }
+      });
+    });
+  </script>
+  </body>
+</html>
+

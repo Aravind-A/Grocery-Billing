@@ -1,0 +1,258 @@
+﻿<!DOCTYPE html>
+<html>
+  <head>  
+    <meta charset="UTF-8" />
+    <title>Bill details</title>
+    {% load staticfiles %}
+    <link rel="stylesheet" type="text/css" href="{% static 'bootstrap-3.3.7-dist/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'bootstrap-3.3.7-dist/css/bootstrap-theme.min.css' %}">
+	  <style>
+      
+/* NOTE: The styles were added inline because Prefixfree needs access to your styles and they must be inlined if they are on local disk! */
+      
+@charset "UTF-8";
+
+
+[data-sort-by='billID'] [data-prop-name='billID'], 
+[data-sort-by='billDate'] [data-prop-name='billDate'], 
+[data-sort-by='custID'] [data-prop-name='custID'], 
+[data-sort-by='total'] [data-prop-name='total']
+{
+  background: rgba(0, 0, 128, 0.15);
+  text-shadow: 0 1px #eee;
+}
+
+
+[data-sort-by='billID'] [data-prop-name='billID']:before, 
+[data-sort-by='billDate'] [data-prop-name='billDate']:before, 
+[data-sort-by='custID'] [data-prop-name='custID']:before, 
+[data-sort-by='total'] [data-prop-name='total']:before
+{
+  box-shadow: 0 0 .5em navy;
+}
+
+
+[data-sort-by='billID'] .prop__name[data-prop-name='billID'], 
+[data-sort-by='billDate'] .prop__name[data-prop-name='billDate'], 
+[data-sort-by='custID'] .prop__name[data-prop-name='custID'] ,
+[data-sort-by='total'] .prop__name[data-prop-name='total']
+{
+  color: lightcyan;
+}
+
+
+[data-sort-by='billID'] .prop__name[data-dir='1'][data-prop-name='billID']:after, 
+[data-sort-by='billDate'] .prop__name[data-dir='1'][data-prop-name='billDate']:after, 
+[data-sort-by='custID'] .prop__name[data-dir='1'][data-prop-name='custID']:after,
+[data-sort-by='total'] .prop__name[data-dir='1'][data-prop-name='total']:after  
+{
+  content: '▲';
+}
+
+
+[data-sort-by='billID'] .prop__name[data-dir='-1'][data-prop-name='billID']:after, 
+[data-sort-by='billDate'] .prop__name[data-dir='-1'][data-prop-name='billDate']:after, 
+[data-sort-by='total'] .prop__name[data-dir='-1'][data-prop-name='total']:after, 
+[data-sort-by='custID'] .prop__name[data-dir='-1'][data-prop-name='custID']:after 
+{
+  content: '▼';
+}
+
+
+
+* 
+{
+  box-sizing: inherit;
+}
+
+
+
+body {
+  
+background: #555;
+  
+font: 1em/1.25 trebuchet ms, verdana, sans-serif;
+  
+color: #fff;
+}
+
+
+
+table {
+  
+box-sizing: border-box;
+  
+overflow: hidden;
+  
+margin: 4em auto;
+  
+border-collapse: collapse;
+  
+min-width: 23em;
+  
+width: 90%;
+  
+max-width: 56em;
+  
+border-radius: .5em;
+  
+box-shadow: 0 0 .5em #000;
+}
+
+
+
+thead {
+  
+background: linear-gradient(#606062, #28262b);
+  
+font-weight: 700;
+  
+letter-spacing: 1px;
+  
+text-transform: uppercase;
+  
+cursor: pointer;
+}
+
+
+
+th {
+  text-align: left;
+}
+
+
+
+tbody {
+  display: flex;
+  flex-direction: column;
+  color: #000;
+}
+
+
+
+tr {
+  display: block;
+  overflow: hidden;
+  width: 100%;
+}
+
+
+
+.odd {
+  background: linear-gradient(#eeeeee 1px, #dddddd 1px, #cccccc calc(100% - 1px), #999999 calc(100% - 1px));
+}
+
+
+
+.even {
+  background: linear-gradient(#eeeeee 1px, #bbbbbb 1px, #aaaaaa calc(100% - 1px), #999999 calc(100% - 1px));
+}
+
+
+
+[class*='prop__'] {
+  float: left;
+  position: relative;
+  padding: .5em 1em;
+  width: 25%;
+}
+
+
+[class*='prop__']:last-child {
+  width: 20%;
+}
+
+
+[class*='prop__']:before {
+  position: absolute;
+  top: -.5em;
+  right: 0;
+  bottom: -5em;
+  left: 0;
+  content: "";
+}
+
+
+[class*='prop__']:after {
+  position: absolute;
+  right: .5em;
+}
+		</style>
+	</head>
+  <body>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-2">
+          <br>
+          <a href="/users/dashboard">Back to dashboard</a>
+        </div>
+        <div class="col-md-8 text-center">
+          <h1>Bill Details for ID {{ id }}</h1>
+        </div>
+      </div>
+
+      <div class="row">
+            <div class="col-md-6">
+                {% if customerName != "NA" %}
+                    <div class="row">
+                      <p>Customer ID : {{ customerId }}</p>
+                    </div>
+                    <div class="row">
+                        <p>{{ customerName }}</p>
+                    </div>
+                {% else %}
+                  <div class="row">
+                    <p>Unregistered Customer</p>
+                  </div>
+                {% endif %}
+            </div>
+            <div class="col-md-6 pull-right">
+                <div class="row">
+                    <p>Cashier ID : {{ cashierId }}</p>
+                </div>
+                <div class="row">
+                    <p>Cashier Name : {{ cashierName }}</p>
+                </div>
+                <div class="row">
+                    <p>Date : {{ date }}</p>
+                </div>
+            </div>
+      </div>
+      <div class="row">
+            <div class="col-md-12">
+                <table class="table table-borderless" id="table1" style="background-color: white">
+                    <thead>
+                        <tr class="row">
+                            <th class="prop__name col-md-2 text-center" data-prop-name='itemId'>Item ID</th>
+                            <th class="prop__name col-md-6 text-center" data-prop-name='itemName'>Item Name</th> 
+                            <th class="prop__name col-md-2 text-center" data-prop-name='qtyPurchased'>Quantity Purchased</th>
+                            <th class="prop__name col-md-2 text-center" data-prop-name='amount'>Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for id,name,qty,amount in details %}
+                        <tr class="row">
+                            <td class="col-md-2 text-center">{{ id }}</td>
+                            <td class="col-md-6 text-center">{{ name }}</td> 
+                            <td class="col-md-2 text-center">{{ qty }}</td>
+                            <td class="col-md-2 text-center">{{ amount }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+      </div>
+      <div class="row">
+            <div class="col-md-3 col-md-offset-7 text-center">
+                <h2>Total : </h2>
+            </div>
+            <div class="col-md-2 text-center">
+                <h2>{{ total }}</h2>
+            </div>
+      </div>
+    </div>    
+  <script type="text/javascript" src="{% static 'js/BillDetails.js' %}"></script>
+  <script type="text/javascript" src="{% static 'js/prefixfree.min.js' %}"></script>
+  <script type="text/javascript" src="{% static 'js/modernizr.js' %}"></script>
+</body>
+</html>
